@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# mst: list of staff requesting mst
+# Notes: run as root, include lastdate as argument, put file in $PATH and remember to +x
+# Author: 1272
+# Date: 8th January 2019, Tuesday.
+# Version: 1.1
+# Release notes: DB and server details omitted. It is assumed that as part of BSSEA, you are well aware of the architecture.
+#                The script is just for ease of use among us.
+# Proposals for future versions: Generate the Excel sheet directly from the script
+
+# Date last list was sent to HR
+lastdate=\'$1\'
+
+# Current date
+today=`date +%Y%m%d`
+
+# Monthly folder name
+month=`date +%B_%Y`
+
+# Convert to lowercase. Optional.
+month=$(echo $month | tr "[:upper:]" "[:lower:]")
+
+# Check if the monthly folder exists, otherwise create a new one
+if [[ -e "$month" ]]; then
+	# Location to store the staff list
+	>&2 echo "Folder $month already exists. Continuing." 
+	filepath=/path/to/"$month"/
+else
+	mkdir /path/to/"$month"/
+	filepath=/path/to/"$month"/
+	
+fi
+
+# File that will contain the staff list 
+filename="$filepath$today".xls
+
+# Get the list 
+# Please use the full path in case of an error, otherwise it is part of $PATH
+mysql --execute="USE [database]; SELECT [col 1], [col 2], [col 3], [col 4] FROM [table] WHERE str_to_date([col 4], '%Y-%m-%d %T') > $lastdate;" > $filename
+
+echo "List generated. Use Filezilla, WinSCP or any [S]FTP client of your choice to copy the file "$today" to your local machine."
+echo "The location of the file is "$filename"."
