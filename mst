@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # mst: list of staff requesting mst
-# Notes: run as root, include lastdate as argument, put file in $PATH and remember to +x
+# Notes: run as root, include $lastdate as argument, put file in $PATH and remember to +x
 # Author: 1272
 # Date: 8th January 2019, Tuesday.
 # Version: 1.1
